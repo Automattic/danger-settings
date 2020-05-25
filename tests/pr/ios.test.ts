@@ -26,7 +26,7 @@ beforeEach(() => {
     },
   }
 
-  dm.danger.github.utils.fileContents = async (_path, _repo, ref) => { return "" }
+  dm.danger.github.utils.fileContents = () => Promise.resolve('')
 })
 
 describe("iOS safety checks", () => {

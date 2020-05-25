@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["es2018"],
+    "strict": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
