@@ -1,14 +1,37 @@
-jest.mock("danger", () => jest.fn())
-import * as danger from "danger"
-const dm = danger as any
-
 import {iOSSafetyChecks as ios} from "../../org/pr/ios"
 
+// Because Danger strips Danger's imports at runtime, we don't import Danger in
+// our sources. Instead, we simply assume they exist in the global namespace.
+// In the tests, we need to provide a test double for everything, though.
+declare const global: any
 beforeEach(() => {
-  dm.message = jest.fn().mockReturnValue(true)
-  dm.warn = jest.fn().mockReturnValue(true)
+  global.message = jest.fn()
+  global.warn = jest.fn()
+  global.danger = {
+    git: {
+      created_files: [],
+      deleted_files: [],
+      modified_files: []
+    },
+    github: {
+      issue: {
+        labels: []
+      },
+      pr: {
+        base: { ref: 'test' },
+        head: { ref: 'test' },
+      },
+      utils: {}
+    }
+  }
+})
 
-  dm.danger = {
+
+beforeEach(() => {
+  global.message = jest.fn().mockReturnValue(true)
+  global.warn = jest.fn().mockReturnValue(true)
+
+  global.danger = {
     git: {
       created_files: [],
       deleted_files: [],
@@ -26,12 +49,12 @@ beforeEach(() => {
     },
   }
 
-  dm.danger.github.utils.fileContents = () => Promise.resolve('')
+  global.danger.github.utils.fileContents = () => Promise.resolve('')
 })
 
 describe("iOS safety checks", () => {
   it("notifies the user that some checks will be skipped on PRs with 'Releases' label", async () => {
-    dm.danger.github.issue.labels = [
+    global.danger.github.issue.labels = [
       {
         name: 'Releases'
       }
@@ -39,13 +62,13 @@ describe("iOS safety checks", () => {
 
     await ios()
 
-    expect(dm.message).toHaveBeenCalledWith(
+    expect(global.message).toHaveBeenCalledWith(
       "This PR has the 'Releases' label: some checks will be skipped."
     )
   })
 
   it("does not notify the user that some checks will be skipped on PRs without 'Releases' label", async () => {
-    dm.danger.github.issue.labels = [
+    global.danger.github.issue.labels = [
       {
         name: 'not releases'
       }
@@ -53,29 +76,29 @@ describe("iOS safety checks", () => {
 
     await ios()
 
-    expect(dm.message).not.toHaveBeenCalled()
+    expect(global.message).not.toHaveBeenCalled()
   })
 
   it("warns when updating strings on not release branch", async () => {
-    dm.danger.git.modified_files = ["WordPress/Resources/en.lproj/Localizable.strings"]
+    global.danger.git.modified_files = ["WordPress/Resources/en.lproj/Localizable.strings"]
 
     await ios();
 
-    expect(dm.warn).toHaveBeenCalledWith("Localizable.strings should only be updated on release branches because it is generated automatically.");
+    expect(global.warn).toHaveBeenCalledWith("Localizable.strings should only be updated on release branches because it is generated automatically.");
   })
 
   it("does not warn when pdating strings on release branch", async () => {
-    dm.danger.git.modified_files = ["WordPress/Resources/en.lproj/Localizable.strings"]
-    dm.danger.github.pr.head.ref="release/1.1";
+    global.danger.git.modified_files = ["WordPress/Resources/en.lproj/Localizable.strings"]
+    global.danger.github.pr.head.ref="release/1.1";
 
     await ios();
 
-    expect(dm.warn).not.toHaveBeenCalled();
+    expect(global.warn).not.toHaveBeenCalled();
   })
 
   it("does not warns when updating strings on not release branch and releases label", async () => {
-    dm.danger.git.modified_files = ["WordPress/Resources/en.lproj/Localizable.strings"]
-    dm.danger.github.issue.labels = [
+    global.danger.git.modified_files = ["WordPress/Resources/en.lproj/Localizable.strings"]
+    global.danger.github.issue.labels = [
       {
         name: 'Releases'
       }
@@ -83,7 +106,7 @@ describe("iOS safety checks", () => {
 
     await ios();
 
-    expect(dm.warn).not.toHaveBeenCalled();
-    expect(dm.message).toHaveBeenCalledWith("This PR has the 'Releases' label: some checks will be skipped.");
+    expect(global.warn).not.toHaveBeenCalled();
+    expect(global.message).toHaveBeenCalledWith("This PR has the 'Releases' label: some checks will be skipped.");
   })
 })
