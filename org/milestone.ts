@@ -15,6 +15,16 @@ declare var danger: DangerDSLType
 export declare function warn(message: string): void
 
 export async function checkMilestone() {
+  // Skip for release PRs
+  const labels = danger.github.issue.labels;
+
+  if (labels.length != 0) {
+    const releases = labels.some(label => label.name.includes("Releases"));
+    if (releases) {
+      return;
+    }
+  }
+
   // Warn if the issue doesn't have a milestone (PRs are issues too)
   const issue = await danger.github.api.issues.get(danger.github.thisPR);
   if (issue.data.milestone == null) {

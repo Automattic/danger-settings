@@ -36,4 +36,18 @@ describe("PR milestone checks", () => {
 
     expect(global.warn).not.toHaveBeenCalled();
   })
+
+  it("does not warn when there is no milestone but there is the 'Releases' label", async () => {
+    global.danger.github.api.issues.get.mockReturnValueOnce(Promise.resolve({ data: { milestone: null } }))
+
+    global.danger.github.issue.labels = [
+      {
+        name: 'Releases'
+      }
+    ]
+
+    await milestone();
+
+    expect(global.warn).not.toHaveBeenCalled();
+  })
 })
