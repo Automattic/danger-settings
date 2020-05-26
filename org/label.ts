@@ -21,6 +21,12 @@ export async function checkLabel() {
   if (danger.github.issue.labels.length == 0) {
     warn("PR is missing at least one label.");
   }
+
+  // A PR shouldn't be merged with the 'DO NOT MERGE' label
+  const doNotMerge = labels.some(label => label.name.includes("DO NOT MERGE"));
+  if (doNotMerge) {
+    warn("This PR is labelled with 'DO NOT MERGE'. Please don't merge it.");
+  }
 };
 
 // Not exactly sure why, but in order for the multiple files + import setup to
