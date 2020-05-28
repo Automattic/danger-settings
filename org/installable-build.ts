@@ -16,7 +16,9 @@ declare var danger: DangerDSLType
 export declare function warn(message: string): void
 
 export async function installableBuild(status: Status) {
-  console.log("Not a status we want to process for installable builds - got 'Failure context' (fail)")
+  console.log(
+    `Not a status we want to process for installable builds - got '${status.context}' (${status.state})`
+  )
 };
 
 // Not exactly sure why, but in order for the multiple files + import setup to

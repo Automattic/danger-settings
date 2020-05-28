@@ -26,9 +26,13 @@ describe("installable build handling", () => {
     // Later on, I'd like to do something about this, for example by creating a
     // builder function in this test for it.
     await installableBuild({ state: "fail", context: "Failure context" } as any);
-
     expect(console.log).toBeCalledWith(
       "Not a status we want to process for installable builds - got 'Failure context' (fail)"
+    )
+
+    await installableBuild({ state: "success", context: "ci/circleci: Installable Build/Hold" } as any)
+    expect(console.log).toBeCalledWith(
+      "Not a status we want to process for installable builds - got 'ci/circleci: Installable Build/Hold' (success)"
     )
   })
 })
