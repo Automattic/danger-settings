@@ -1767,6 +1767,11 @@ git-config-path@^1.0.1:
     fs-exists-sync "^0.1.0"
     homedir-polyfill "^1.0.0"
 
+github-webhook-event-types@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/github-webhook-event-types/-/github-webhook-event-types-1.2.1.tgz#3427ec2d7625457ef9c1bac5e929cb59b63bd667"
+  integrity sha512-S0/O8tggnJwNYx4Gp39pgarBjO9/bY5/PAY8zlx8HuacWVULqk05M9wmZ0n42ueN+YSPWx/1BAItBKzv//4GfA==
+
 gitlab@^10.0.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/gitlab/-/gitlab-10.2.1.tgz#1f5fb2c2bad08f95b7c7d91dd41805ab5eea3960"
