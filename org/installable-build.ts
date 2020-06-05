@@ -153,7 +153,7 @@ async function circleCIArtifacts(status: any): Promise<any[]> {
   if (urlPath === null) {
     return []
   }
-  const buildNumber = +path.parse(urlPath).base;
+  const buildNumber = parseInt(path.parse(urlPath).base);
 
   const owner = status.repository.owner.login;
   const repo = status.repository.name;
