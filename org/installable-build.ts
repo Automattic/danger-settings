@@ -153,13 +153,7 @@ async function circleCIArtifacts(status: any): Promise<any[]> {
   if (urlPath === null) {
     return []
   }
-  // In Swift, I'd do something like
-  //
-  // guard path = urlPath else { return [] }
-  // // now path is certanly a string
-  //
-  // But I don't know how to do the same in TypeScript
-  const buildNumber = +path.parse(urlPath as string).base;
+  const buildNumber = +path.parse(urlPath).base;
 
   const owner = status.repository.owner.login;
   const repo = status.repository.name;
