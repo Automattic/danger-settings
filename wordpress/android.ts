@@ -4,6 +4,7 @@ export async function wordPressAndroid () {
   const {checkLabel} = await import("../org/label")
   const {checkMilestone} = await import("../org/pr/milestone")
   const {checkDiffSize} = await import("../org/pr/diff-size")
+  const {checkSubtrees} = await import("../org/pr/check-subtrees")
   const {androidSafetyChecks} = await import("../org/pr/android")
 
   await checkLabel()
@@ -13,7 +14,7 @@ export async function wordPressAndroid () {
   // See https://github.com/wordpress-mobile/WordPress-iOS/pull/14187
   // await checkMilestone()
   await androidSafetyChecks()
-  // TODO: need to port over check-subtrees, too
+  await checkSubtrees()
 }
 
 export default wordPressAndroid
